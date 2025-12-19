@@ -1,0 +1,74 @@
+==============================================================================
+COMMAND LINE WARFARE: THE JAMMER - OYUN REHBERİ
+==============================================================================
+
+1. OYUNUN HİKAYESİ VE AMACI
+------------------------------------------------------------------------------
+Savaş alanındasın. Karargah (Commander), cephedeki Topçu Birliği'ne (Artillery) 
+kritik atış koordinatları göndermek zorunda. Ancak düşman hattında bir 
+Sinyal Karıştırıcı (Jammer) var ve bu mesajları yakalayıp bozmaya çalışıyor.
+
+Amacımız: 
+Veri iletiminde kullanılan "Hata Tespit Yöntemlerini" (Parity, CRC vb.) 
+kullanarak, düşmanın mesajı bozup bozamadığını simüle etmek.
+
+2. ROLLER (KİM NE YAPAR?)
+------------------------------------------------------------------------------
+[A] COMMANDER (Komutan - Client 1):
+    Görevi: Emir vermek ve bu emri şifrelemek.
+    Yeteneği: Emri korumak için Zayıf (Parity) veya Güçlü (CRC) güvenlik 
+    yöntemi seçebilir.
+
+[B] JAMMER (Düşman - Server):
+    Görevi: Hatta sızmak.
+    Yeteneği: Mesajı yakalar ve içeriğini değiştirebilir (Tek bir harfi veya 
+    biti bozabilir).
+
+[C] ARTILLERY (Topçu - Client 2):
+    Görevi: Emri uygulamak.
+    Yeteneği: Gelen mesajın bozulup bozulmadığını kontrol eder. 
+    - Eğer mesaj sağlamsa: "HEDEF VURULDU" yazar.
+    - Eğer mesaj bozuksa: "SİNYAL BOZUK, ATIŞ İPTAL" yazar.
+
+3. ADIM ADIM OYNANIŞ
+------------------------------------------------------------------------------
+Oyunu oynamak için 3 ayrı terminal penceresine ihtiyacınız var.
+
+ADIM 1: BAĞLANTILARI KUR
+   Sırasıyla şu kodları terminallerde çalıştır:
+   1. Terminal: python artillery.py  (Topçu mevziye yerleşir)
+   2. Terminal: python jammer.py     (Düşman pusuya yatar)
+   3. Terminal: python commander.py  (Komutan masaya oturur)
+
+ADIM 2: EMİR GÖNDER (Commander Ekranı)
+   - Bir emir yaz (Örn: "SALDIR", "102,45 KOORDINAT").
+   - Bir güvenlik yöntemi seç:
+     * [1] Parity: Düşman kolayca kandırabilir.
+     * [3] CRC-16: En güvenli yöntemdir, en ufak hatayı yakalar.
+
+ADIM 3: SABOTAJ YAP (Jammer Ekranı)
+   - Komutanın mesajı düşman ekranına düşer.
+   - Bir saldırı yöntemi seç:
+     * [1] Sızma Yok: Mesajı elleme, olduğu gibi geçsin.
+     * [2] Bit Flip: Mesajın binary kodunda tek bir biti değiştir.
+     * [3] Burst Error: Mesajı karala (büyük hasar ver).
+
+ADIM 4: SONUCU İZLE (Artillery Ekranı)
+   - Topçu birliği hesaplamayı yapar.
+   - Eğer seçilen koruma yöntemi (CRC vb.), düşmanın yaptığı sabotajı 
+     fark ederse ekran KIRMIZI olur (Saldırı başarısız, veri güvenliği çalıştı).
+   - Eğer mesaj bozulmamışsa ekran YEŞİL olur (Hedef vuruldu).
+
+4. ÖRNEK SENARYOLAR
+------------------------------------------------------------------------------
+Senaryo A: Güvenli İletişim
+   Komutan "ATES" yazar, CRC seçer. Düşman "Sızma Yok" der.
+   SONUÇ: YEŞİL (Hedef Vuruldu).
+
+Senaryo B: Başarılı Savunma
+   Komutan "ATES" yazar, CRC seçer. Düşman "Bit Flip" yapar.
+   SONUÇ: KIRMIZI (Sinyal Bozuk!). CRC yöntemi hatayı yakaladı.
+
+------------------------------------------------------------------------------
+İyi Eğlenceler Komutan!
+==============================================================================
